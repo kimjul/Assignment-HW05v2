@@ -1,0 +1,81 @@
+---
+title: "HW05"
+author: "Julius Mwangi"
+date: "June 10, 2018"
+output: html_document
+---
+
+#1.	Data Munging (30 points): Utilize yob2016.txt for this question. 
+##a. 
+```{r}
+yob2016 <- read.csv("C:/Users/28911016/Desktop/Hesabu/2DScience/yob2016.txt", sep=";")
+View(yob2016)
+head(yob2016)
+colnames(yob2016) <- c("names","gender","frequency")
+summary(yob2016)
+
+```
+##b.Display the summary and structure of df
+```{r}
+summary(yob2016)
+```
+##c.
+
+*I had already cleaned the data before running this code below, by idnetifying the mispelt names as "Fionayyy;F;1547"
+```{r}
+grep("yyy",yob2016)
+```
+
+##d.
+```{r}
+save(yob2016, file = "y2016")
+```
+#2.Data Merging
+```{r}
+yob2015 <- read.csv("C:/Users/28911016/Desktop/Hesabu/2DScience/yob2015.txt", sep=",")
+names(yob2015) <- c("names", "gender", "frequency")
+View(yob2015)
+summary(yob2015)
+y2015<-(yob2015)
+```
+##2.b	Display the last ten rows in the dataframe.  
+
+```{r}
+tail(y2015, 10)
+```
+The last ten names all start with "Z", each name was used 5 times , and their gender is Male
+
+```{r}
+names(yob2016)[names(yob2016) == "names_2015"] <- "names_2016"
+final<-merge(yob2016,y2015,by="names")
+summary(final)
+
+```
+#3.	Data Summary (30 points): Utilize your data frame object final for this part.
+##a.Create a new column called "Total" in final that adds the amount of children in 2015 and 2016 together.  In those two years combined, how many people were given popular names?
+
+```{r}
+final$Total <- final$frequency.x + final$frequency.y
+summary(final$Total)
+head(final)
+
+```
+35 people were given popular names
+
+##b.	Sort the data by Total.  What are the top 10 most popular names?
+```{r}
+bytotal <- final[order(final$Total),] 
+head(bytotal,10)
+```
+##c.	The client is expecting a girl!  Omit boys and give the top 10 most popular girl's names.
+
+```{r}
+bytotal <- final[order(final$Total),]
+bytotal = subset(bytotal, gender.x == "F", gender.y =="F")
+summary(bytotal)
+head(bytotal,10)
+final2<-head(bytotal,10)
+write.csv(final2, file = "final2.csv")
+```
+
+Results remains as above - must be doing something wrong.
